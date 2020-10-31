@@ -1,16 +1,16 @@
 import { IllegalArgumentError } from '../errors/IllegalArgumentError'
-import { Name } from './Name'
+import { UserName } from './Name'
 
 export class FullName {
-  private firstName: Name
-  private lastName: Name
+  private firstName: UserName
+  private lastName: UserName
 
   constructor(firstName: string, lastName: string) {
     if (!firstName || !lastName) {
       throw new IllegalArgumentError('入力が空です')
     }
-    this.firstName = new Name(firstName)
-    this.lastName = new Name(lastName)
+    this.firstName = new UserName(firstName)
+    this.lastName = new UserName(lastName)
   }
 
   public get() {
