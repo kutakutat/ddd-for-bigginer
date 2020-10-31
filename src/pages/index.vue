@@ -1,34 +1,48 @@
 <template>
   <div class="container">
     <div>
-      <Logo />
       <h1 class="title">ddd-for-bigginer</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+      <p>名前 : {{ fullName }}</p>
+      <p>インスタンスの比較 : {{ isEqual }}</p>
+      <p>プロパティの比較 : {{ isSame }}</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import { FullName } from '@/domain/models/users/FullName'
 
-export default Vue.extend({})
+export default Vue.extend({
+  data() {
+    return {
+      fullName: '',
+      isEqual: false,
+      isSame: false,
+    }
+  },
+  created() {
+    this.fullName = this.getFullName()
+    this.isEqual = this.isEqualInstance()
+    this.isSame = this.isSamelName()
+  },
+  methods: {
+    getFullName() {
+      const fullName = new FullName('pon', 'yoshida')
+      return fullName.get()
+    },
+    isEqualInstance() {
+      const nameA = new FullName('pon', 'yoshida')
+      const nameB = new FullName('pon', 'yoshida')
+      return nameA === nameB
+    },
+    isSamelName() {
+      const nameA = new FullName('pon', 'yoshida')
+      const nameB = new FullName('pon', 'yoshida')
+      return nameA.get() === nameB.get()
+    },
+  },
+})
 </script>
 
 <style>
