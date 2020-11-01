@@ -2,8 +2,8 @@
   <div class="container">
     <div>
       <h1 class="title">ddd-for-bigginer</h1>
-      <p>ID : {{ user.id }}</p>
-      <p>名前 : {{ user.name }}</p>
+      <p>ID : {{ user.id.value }}</p>
+      <p>名前 : {{ user.name.value }}</p>
     </div>
   </div>
 </template>
@@ -14,6 +14,7 @@ import { User } from '@/domain/models/users/User'
 import { UserId } from '~/domain/models/users/UserId'
 import { UserName } from '~/domain/models/users/Name'
 import { UserService } from '~/domain/services/UserService'
+import { InMemoryUserRepository } from '~/infrastructure/InMemoryUserReoisitory'
 
 export default Vue.extend({
   data() {
@@ -24,9 +25,10 @@ export default Vue.extend({
   created() {
     const userId = new UserId('test12345')
     const userName = new UserName('ponyoshida')
-    const userService = new UserService()
+    const userRepository = new InMemoryUserRepository()
+    const userService = new UserService(userRepository)
     this.user = new User(userId, userName)
-    if (!userService.exists(this.user)) {
+    if (userService.exists(this.user)) {
       console.error('User が重複しています')
     }
   },

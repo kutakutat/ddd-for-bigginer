@@ -14,12 +14,12 @@ export class User {
     this.userName = name
   }
 
-  get id(): string {
-    return this.userId.value
+  get id(): UserId {
+    return this.userId
   }
 
-  get name(): string {
-    return this.userName.value
+  get name(): UserName {
+    return this.userName
   }
 
   /**
