@@ -2,46 +2,35 @@
   <div class="container">
     <div>
       <h1 class="title">ddd-for-bigginer</h1>
-      <p>名前 : {{ fullName }}</p>
-      <p>インスタンスの比較 : {{ isEqual }}</p>
-      <p>プロパティの比較 : {{ isSame }}</p>
+      <p>ID : {{ user.id }}</p>
+      <p>名前 : {{ user.name }}</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { FullName } from '@/domain/models/users/FullName'
+import { User } from '@/domain/models/users/User'
+import { UserId } from '~/domain/models/users/UserId'
+import { UserName } from '~/domain/models/users/Name'
+import { UserService } from '~/domain/services/UserService'
 
 export default Vue.extend({
   data() {
     return {
-      fullName: '',
-      isEqual: false,
-      isSame: false,
+      user: {} as User,
     }
   },
   created() {
-    this.fullName = this.getFullName()
-    this.isEqual = this.isEqualInstance()
-    this.isSame = this.isSamelName()
+    const userId = new UserId('test12345')
+    const userName = new UserName('ponyoshida')
+    const userService = new UserService()
+    this.user = new User(userId, userName)
+    if (!userService.exists(this.user)) {
+      console.error('User が重複しています')
+    }
   },
-  methods: {
-    getFullName() {
-      const fullName = new FullName('pon', 'yoshida')
-      return fullName.get()
-    },
-    isEqualInstance() {
-      const nameA = new FullName('pon', 'yoshida')
-      const nameB = new FullName('pon', 'yoshida')
-      return nameA === nameB
-    },
-    isSamelName() {
-      const nameA = new FullName('pon', 'yoshida')
-      const nameB = new FullName('pon', 'yoshida')
-      return nameA.get() === nameB.get()
-    },
-  },
+  methods: {},
 })
 </script>
 
@@ -60,7 +49,7 @@ export default Vue.extend({
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   display: block;
   font-weight: 300;
-  font-size: 100px;
+  font-size: 40px;
   color: #35495e;
   letter-spacing: 1px;
 }
