@@ -1,7 +1,7 @@
-import { IllegalArgumentError } from '../errors/IllegalArgumentError'
+import { IllegalArgumentError } from '../../library/errors/IllegalArgumentError'
 
 export class UserName {
-  private readonly value: string
+  private readonly name: string
 
   constructor(value: string) {
     if (!value) {
@@ -14,10 +14,10 @@ export class UserName {
     if (!regex.test(value)) {
       throw new IllegalArgumentError('許可されていない文字が使用されています')
     }
-    this.value = value
+    this.name = value
   }
 
-  get() {
-    return this.value
+  get value() {
+    return this.name
   }
 }

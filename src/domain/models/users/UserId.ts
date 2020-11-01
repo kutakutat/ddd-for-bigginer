@@ -1,11 +1,16 @@
-import { IllegalArgumentError } from '../errors/IllegalArgumentError'
+import { IllegalArgumentError } from '../../library/errors/IllegalArgumentError'
 
 export class UserId {
   private readonly userId: string
-  constructor(value: string) {
-    if (!value) {
+
+  constructor(userId: string) {
+    if (!userId) {
       throw new IllegalArgumentError('文字が空です')
     }
-    this.userId = value
+    this.userId = userId
+  }
+
+  get value() {
+    return this.userId
   }
 }

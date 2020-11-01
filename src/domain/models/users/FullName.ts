@@ -1,4 +1,4 @@
-import { IllegalArgumentError } from '../errors/IllegalArgumentError'
+import { IllegalArgumentError } from '../../library/errors/IllegalArgumentError'
 import { UserName } from './Name'
 
 export class FullName {
@@ -13,7 +13,7 @@ export class FullName {
     this.lastName = new UserName(lastName)
   }
 
-  public get() {
-    return `${this.lastName.get()} ${this.firstName.get()}`
+  public get value() {
+    return `${this.lastName.value} ${this.firstName.value}`
   }
 }
