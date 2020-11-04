@@ -9,8 +9,11 @@ export class UserService {
    * exists
    */
   public exists(user: User): boolean {
-    // FIXME 永続化している User のデータに問い合わせて確認する
-    const found = this.userRepository.find(user.name)
+    /**
+     * UserId が一致する場合に存在すると判定している
+     * TODO : その他の識別子 Email などの判定を考慮する
+     */
+    const found = this.userRepository.find(user.id)
     return !!found
   }
 }

@@ -13,4 +13,12 @@ export class UserId {
   get value() {
     return this.userId
   }
+
+  /**
+   * UserId によって等価性を判定します
+   * other:UserId
+   */
+  public equals(other: UserId): boolean {
+    return this.userId === other.userId
+  }
 }

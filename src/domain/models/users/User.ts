@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid'
 import { IllegalArgumentError } from '../../library/errors/IllegalArgumentError'
 import { UserName } from './Name'
 import { UserId } from './UserId'
@@ -6,12 +7,18 @@ export class User {
   private readonly userId: UserId
   private userName: UserName
 
-  constructor(userId: UserId, name: UserName) {
-    if (!userId || !name) {
+  constructor(name: UserName, userId?: UserId) {
+    if (!name || userId === null) {
       throw new IllegalArgumentError('入力がからです')
     }
-    this.userId = userId
-    this.userName = name
+    if (!userId && typeof userId !== 'undefined') {
+      this.userId = userId
+      this.userName = name
+    } else {
+      const uuid: string = uuidv4()
+      this.userId = new UserId(uuid)
+      this.userName = name
+    }
   }
 
   get id(): UserId {

@@ -2,37 +2,57 @@
   <div class="container">
     <div>
       <h1 class="title">ddd-for-bigginer</h1>
-      <p>ID : {{ user.id.value }}</p>
-      <p>名前 : {{ user.name.value }}</p>
+      <p>
+        登録名 :
+        <input v-model="inputName" type="text" />
+      </p>
+      <button @click="onRegisterUserButton">Register</button>
+      <p>ID : {{ userId }}</p>
+      <button @click="onClickFindButton">Find</button>
+      <p>Found? : {{ isFound }}</p>
+      <p>名前 : {{ userName }}</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { User } from '@/domain/models/users/User'
 import { UserId } from '~/domain/models/users/UserId'
 import { UserName } from '~/domain/models/users/Name'
-import { UserService } from '~/domain/services/UserService'
 import { InMemoryUserRepository } from '~/infrastructure/InMemoryUserReoisitory'
+import { UserApplicationService } from '~/application/UserApplicationService'
+import { UserRepository } from '~/application/UserRepository'
 
 export default Vue.extend({
   data() {
     return {
-      user: {} as User,
+      inputName: '',
+      userId: '',
+      userName: '',
+      repository: {} as UserRepository,
+      isFound: false,
     }
   },
   created() {
-    const userId = new UserId('test12345')
-    const userName = new UserName('ponyoshida')
-    const userRepository = new InMemoryUserRepository()
-    const userService = new UserService(userRepository)
-    this.user = new User(userId, userName)
-    if (userService.exists(this.user)) {
-      console.error('User が重複しています')
-    }
+    this.repository = new InMemoryUserRepository()
   },
-  methods: {},
+  methods: {
+    onClickFindButton() {
+      const userApllicationService = new UserApplicationService(this.repository)
+      const userId = new UserId(this.userId)
+      const user = userApllicationService.get(userId)
+      if (user !== null) {
+        this.isFound = true
+        this.userName = user.name.value
+      }
+    },
+    onRegisterUserButton() {
+      const userApllicationService = new UserApplicationService(this.repository)
+      const userName = new UserName(this.inputName)
+      const userId = userApllicationService.register(userName)
+      this.userId = userId.value
+    },
+  },
 })
 </script>
 

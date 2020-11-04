@@ -2,7 +2,6 @@ import { UserRepository } from '../application/UserRepository'
 import { User } from '~/domain/models/users/User'
 import { UserName } from '~/domain/models/users/Name'
 import { UserId } from '~/domain/models/users/UserId'
-import { deepCopy } from '~/domain/library/utils/DeepCopy'
 
 type InMemoryUserStoreItem = {
   userId: UserId
@@ -13,24 +12,41 @@ export class InMemoryUserRepository implements UserRepository {
   public store: InMemoryUserStoreItem[]
 
   constructor() {
-    this.store = []
+    this.store = [
+      {
+        userId: new UserId('sampleId'),
+        user: new User(new UserName('ponyoshida'), new UserId('sampleId')),
+      },
+    ]
   }
 
-  save(user: User): void {
+  save(user: User): UserId {
     const item: InMemoryUserStoreItem = {
-      userId: deepCopy(user.id),
-      user: deepCopy(user),
+      userId: user.id,
+      user,
     }
     this.store.push(item)
+    return user.id
   }
 
-  find(userName: UserName): User | null {
+  // Overloads
+  find(userId: UserId): User | null
+  // eslint-disable-next-line no-dupe-class-members
+  find(userName: UserName): User | null
+  // eslint-disable-next-line no-dupe-class-members
+  find(value: UserId | UserName): User | null {
     const target = this.store.find((item) => {
-      return item.user.name === userName
+      if (value instanceof UserName) {
+        return value.equals(item.user.name)
+      }
+      if (value instanceof UserId) {
+        return value.equals(item.userId)
+      }
+      return false
     })
     if (target) {
       // ディープコピーを返す
-      return deepCopy(target.user)
+      return target.user
     } else {
       return null
     }
