@@ -1,34 +1,59 @@
 <template>
   <div class="container">
     <div>
-      <Logo />
       <h1 class="title">ddd-for-bigginer</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+      <p>
+        登録名 :
+        <input v-model="inputName" type="text" />
+      </p>
+      <button @click="onRegisterUserButton">Register</button>
+      <p>ID : {{ userId }}</p>
+      <button @click="onClickFindButton">Find</button>
+      <p>Found? : {{ isFound }}</p>
+      <p>名前 : {{ userName }}</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import { UserId } from '~/domain/models/users/UserId'
+import { UserName } from '~/domain/models/users/Name'
+import { InMemoryUserRepository } from '~/infrastructure/InMemoryUserReoisitory'
+import { UserApplicationService } from '~/application/UserApplicationService'
+import { UserRepository } from '~/application/UserRepository'
 
-export default Vue.extend({})
+export default Vue.extend({
+  data() {
+    return {
+      inputName: '',
+      userId: '',
+      userName: '',
+      repository: {} as UserRepository,
+      isFound: false,
+    }
+  },
+  created() {
+    this.repository = new InMemoryUserRepository()
+  },
+  methods: {
+    onClickFindButton() {
+      const userApllicationService = new UserApplicationService(this.repository)
+      const userId = new UserId(this.userId)
+      const user = userApllicationService.get(userId)
+      if (user !== null) {
+        this.isFound = true
+        this.userName = user.name.value
+      }
+    },
+    onRegisterUserButton() {
+      const userApllicationService = new UserApplicationService(this.repository)
+      const userName = new UserName(this.inputName)
+      const userId = userApllicationService.register(userName)
+      this.userId = userId.value
+    },
+  },
+})
 </script>
 
 <style>
@@ -46,7 +71,7 @@ export default Vue.extend({})
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   display: block;
   font-weight: 300;
-  font-size: 100px;
+  font-size: 40px;
   color: #35495e;
   letter-spacing: 1px;
 }
